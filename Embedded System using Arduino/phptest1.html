@@ -1,0 +1,53 @@
+<?php
+$servername = "mysql.hostinger.co.uk";
+$username = ""; // username for your database
+$password = "";
+$dbname = ""; // Name of database
+$now = new DateTime();
+$CRLF = "\n\r";
+
+$fieldToGet = $_GET['user'];
+$pass = $_GET['pass'];
+
+$conn = @mysql_connect($servername,$username,$password);
+
+if (!$conn)
+{
+    die('Could not connect: ' . mysql_error());
+}
+$con_result = mysql_select_db($dbname, $conn);
+mysql_set_charset('utf8');
+mysql_query("SET NAMES 'utf8'"); 
+mysql_query('SET CHARACTER SET utf8');
+
+if(!$con_result)
+{
+	die('Could not connect to specific database: ' . mysql_error());
+}
+
+/*
+ *  Database was created with a table called "DataTable" and has
+ *  a column called "field" and a column called "value" and a 
+ *  column called "logdata"
+ */
+$sql = "SELECT * FROM Customer WHERE CustomerID = '".$fieldToGet."' AND Password = '".$pass."' ";
+$result = mysql_query($sql);
+if (!$result) {
+	die('Invalid query: ' . mysql_error());
+}
+else if($row = mysql_fetch_array($result, MYSQL_ASSOC))
+{
+	echo "<h1>Found!!!</h1>";
+}
+else
+{
+	echo "<h1>NOT Found!!!</h1>";
+}
+
+/*while($row = mysql_fetch_array($result, MYSQL_ASSOC))
+{
+echo "timedate: " . $row["logdata"]. " - field: " . $row["field"]. " - value: " . $row["value"]. "<br>";
+}*/
+
+mysql_close($conn);
+?>
